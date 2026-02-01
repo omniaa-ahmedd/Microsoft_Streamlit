@@ -34,7 +34,7 @@ def train_model(df):
     return model
 
 # --- App Logic ---
-if st.button("Analyze and Predict Apple Stock"):
+if st.button("Analyze and Predict Microsoft Stock"):
     with st.spinner("Fetching data and training model..."):
         raw_data = get_stock_data(years=5)
         df = prepare_data(raw_data)
