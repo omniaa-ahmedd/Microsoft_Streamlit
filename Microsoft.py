@@ -44,7 +44,6 @@ def train_model(df):
 if st.button("Analyze and Predict Apple Stock"):
     with st.spinner("Fetching data and training model..."):
 
-        # 1️⃣ Get raw data
         raw_data = get_stock_data(years=5)
 
         # 🔴 CHECK 1: Did yfinance return data?
@@ -52,7 +51,6 @@ if st.button("Analyze and Predict Apple Stock"):
             st.error("❌ Failed to download stock data. Please try again later.")
             st.stop()
 
-        # 2️⃣ Prepare data
         df = prepare_data(raw_data)
 
         # 🔴 CHECK 2: Does Prophet have enough data?
@@ -60,14 +58,13 @@ if st.button("Analyze and Predict Apple Stock"):
             st.error("❌ Not enough valid data to train the model.")
             st.stop()
 
-        # 3️⃣ Show historical data
+    
         st.subheader("Historical Data (Last 5 Years)")
         st.dataframe(df.tail())
 
-        # 4️⃣ Train model
+
         model = train_model(df)
 
-        # 5️⃣ Forecast
         future = model.make_future_dataframe(periods=360)
         forecast = model.predict(future)
 
@@ -76,12 +73,11 @@ if st.button("Analyze and Predict Apple Stock"):
             forecast[["ds", "yhat", "yhat_lower", "yhat_upper"]].tail()
         )
 
-        # 6️⃣ Forecast plot
+
         st.subheader("📊 Forecast Plot")
         fig1 = plot_plotly(model, forecast)
         st.plotly_chart(fig1, use_container_width=True)
 
-        # 7️⃣ Decomposition
         st.subheader("📉 Decomposition (Trend & Seasonality)")
         st.pyplot(model.plot_components(forecast))
 
