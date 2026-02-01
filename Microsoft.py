@@ -8,22 +8,29 @@ from prophet.plot import plot_plotly
 st.set_page_config(layout="wide")
 st.title("📈 Microsft (MSFT) Stock Price Predictor with Prophet")
 
-# --- 1. Get Stock Data ---
 @st.cache_data
 def get_stock_data(years=5):
-    ticker_symbol = "MSFT"
+    ticker_symbol = "AAPL"
     end_date = datetime.now()
     start_date = end_date - timedelta(days=years * 365)
 
     data = yf.download(ticker_symbol, start=start_date, end=end_date)
-    return data
 
-# --- 2. Prepare Data ---
-@st.cache_data
+if data.empty:
+        return None
+return data
+
+    @st.cache_data
 def prepare_data(data):
     df = data["Close"].reset_index()
     df.columns = ["ds", "y"]
+
     df["ds"] = pd.to_datetime(df["ds"])
+    df["y"] = pd.to_numeric(df["y"], errors="coerce")
+
+    # 🔴 Drop NaN values
+    df = df.dropna()
+
     return df
 
 # --- 3. Train Model ---
